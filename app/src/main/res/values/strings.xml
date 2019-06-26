@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DesafioFluxKotlin</string>
+    <string name="base_url">https://randomuser.me/api/</string>
+</resources>
