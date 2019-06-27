@@ -31,4 +31,18 @@ open class PeopleRepository @Inject constructor() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(succesConsumer, errorConsumer)
     }
+
+    @SuppressLint("CheckResult")
+    fun getPeopleWithSeed(
+        succesConsumer: Consumer<Response<People>>,
+        errorConsumer: Consumer<Throwable>,
+        quantity: Int,
+        seed: String,
+        page: Int
+    ) {
+        peopleService.getPeopleWithSeed(quantity, seed, page)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(succesConsumer, errorConsumer)
+    }
 }

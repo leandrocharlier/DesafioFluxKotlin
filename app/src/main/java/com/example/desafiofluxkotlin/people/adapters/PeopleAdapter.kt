@@ -20,11 +20,9 @@ class PeopleAdapter(var items: List<People.ResultsBean>, val listener: PeopleIte
 
     override fun getItemCount() = items.size
 
-    fun filterPeople(text: String) {
-        if (text.isNotEmpty()) {
-            items.filter { resultsBean -> resultsBean.login?.username?.contains(text)!! }
-            notifyDataSetChanged()
-        }
+    fun updatePeople(items: List<People.ResultsBean>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

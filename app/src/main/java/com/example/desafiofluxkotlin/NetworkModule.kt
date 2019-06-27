@@ -16,7 +16,7 @@ object NetworkModule {
     @Provides
     @Reusable
     @JvmStatic
-    internal fun providePersonaService(retrofit: Retrofit): PeopleService {
+    internal fun providePeopleService(retrofit: Retrofit): PeopleService {
         return retrofit.create(PeopleService::class.java)
     }
 

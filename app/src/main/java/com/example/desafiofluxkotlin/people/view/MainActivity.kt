@@ -5,18 +5,21 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import com.example.desafiofluxkotlin.DaggerPeopleInjector
 import com.example.desafiofluxkotlin.R
 import com.example.desafiofluxkotlin.databinding.ActivityMainBinding
+import com.example.desafiofluxkotlin.people.adapters.EndlessScrollListener
 import com.example.desafiofluxkotlin.people.adapters.PeopleAdapter
 import com.example.desafiofluxkotlin.people.adapters.PeopleItemListener
 import com.example.desafiofluxkotlin.people.model.People
 import com.example.desafiofluxkotlin.people.viewmodel.PeopleViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
+import java.util.*
 import javax.inject.Inject
 
 
@@ -25,8 +28,9 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
     @Inject
     lateinit var peopleViewModel: PeopleViewModel
 
+    var binding: ActivityMainBinding? = null
     val QUANTITY: Int = 20
-    lateinit var adapter : PeopleAdapter
+    var adapter: PeopleAdapter? = null
 
     init {
         DaggerPeopleInjector.create().apply { inject(this@MainActivity) }
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(
             this,
             R.layout.activity_main
         ).apply {
@@ -42,11 +46,11 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
             executePendingBindings()
             lifecycleOwner = this@MainActivity
         }
-        binding.viewModel?.getPeople(QUANTITY)
+        binding?.viewModel?.getPeople(QUANTITY)
 
-        setUpObserver(binding)
-        setUpRecyclerView(binding)
-        swipeRefresh.setOnRefreshListener { binding.viewModel?.getPeople(QUANTITY) }
+        setUpObserver()
+        setUpRecyclerView()
+        swipeRefresh.setOnRefreshListener { binding?.viewModel?.getPeople(QUANTITY) }
 
     }
 
@@ -66,18 +70,18 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
 
-                return false
+                return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                adapter.filterPeople(newText)
+                binding?.viewModel?.filterPeople(newText)?.let { adapter?.updatePeople(it) }
                 return false
             }
         })
     }
 
-    private fun setUpObserver(binding: ActivityMainBinding) {
-        binding.viewModel?.message?.observe(this, Observer {
+    private fun setUpObserver() {
+        binding?.viewModel?.message?.observe(this, Observer {
             it?.let { it1 -> toast(it1) }.also {
                 loading.hide()
                 swipeRefresh.isRefreshing = false
@@ -85,13 +89,25 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
         })
     }
 
-    private fun setUpRecyclerView(binding: ActivityMainBinding) {
+    private fun setUpRecyclerView() {
         recyclerPeople.setHasFixedSize(true)
         recyclerPeople.layoutManager = LinearLayoutManager(this)
-        binding.viewModel?.peopleList?.observe(this, Observer {
-            adapter = it?.results?.let { it1 -> PeopleAdapter(it1, this) }!!
-            recyclerPeople.adapter = adapter
+        adapter = PeopleAdapter(Collections.emptyList(), this)
+        recyclerPeople.adapter = adapter
+        binding?.viewModel?.peopleList?.observe(this, Observer {
+            it?.results?.let { it1 -> adapter?.updatePeople(it1) }
         })
+        setInfiniteScroll()
     }
 
+    private fun setInfiniteScroll() {
+        val peopleList = binding?.viewModel?.peopleList?.value
+        peopleList?.results?.size?.let { it ->
+            recyclerPeople.addOnScrollListener(object : EndlessScrollListener(it) {
+                override fun onLoadMore() {
+                    peopleList.info?.seed?.let { binding?.viewModel?.getPeopleWithSeed(QUANTITY, it) }
+                }
+            })
+        }
+    }
 }
