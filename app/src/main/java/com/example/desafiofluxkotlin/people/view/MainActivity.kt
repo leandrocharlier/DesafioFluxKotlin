@@ -12,7 +12,6 @@ import android.view.MenuItem
 import com.example.desafiofluxkotlin.DaggerPeopleInjector
 import com.example.desafiofluxkotlin.R
 import com.example.desafiofluxkotlin.databinding.ActivityMainBinding
-import com.example.desafiofluxkotlin.people.adapters.EndlessScrollListener
 import com.example.desafiofluxkotlin.people.adapters.PeopleAdapter
 import com.example.desafiofluxkotlin.people.adapters.PeopleItemListener
 import com.example.desafiofluxkotlin.people.model.People
@@ -101,13 +100,17 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
     }
 
     private fun setInfiniteScroll() {
-        val peopleList = binding?.viewModel?.peopleList?.value
-        peopleList?.results?.size?.let { it ->
-            recyclerPeople.addOnScrollListener(object : EndlessScrollListener(it) {
-                override fun onLoadMore() {
-                    peopleList.info?.seed?.let { binding?.viewModel?.getPeopleWithSeed(QUANTITY, it) }
+        recyclerPeople.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val linearLayoutManager = recyclerView
+                    .layoutManager as LinearLayoutManager?
+                val peopleList = binding?.viewModel?.peopleList?.value
+                if (linearLayoutManager?.findLastCompletelyVisibleItemPosition() == peopleList?.results?.size?.minus(1)) {
+                    peopleList?.info?.seed?.let { binding?.viewModel?.getPeopleWithSeed(QUANTITY, it) }
                 }
-            })
-        }
+            }
+        })
     }
+
 }
