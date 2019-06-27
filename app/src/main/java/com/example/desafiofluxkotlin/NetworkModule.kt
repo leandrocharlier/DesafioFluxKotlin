@@ -1,6 +1,6 @@
 package com.example.desafiofluxkotlin
 
-import com.example.desafiofluxkotlin.persona.network.PersonaService
+import com.example.desafiofluxkotlin.people.network.PeopleService
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -16,8 +16,8 @@ object NetworkModule {
     @Provides
     @Reusable
     @JvmStatic
-    internal fun providePersonaService(retrofit: Retrofit): PersonaService {
-        return retrofit.create(PersonaService::class.java)
+    internal fun providePersonaService(retrofit: Retrofit): PeopleService {
+        return retrofit.create(PeopleService::class.java)
     }
 
     @Provides

@@ -1,6 +1,6 @@
-package com.example.desafiofluxkotlin.persona.model
+package com.example.desafiofluxkotlin.people.model
 
-class Persona {
+class People {
     /**
      * results : [{"gender":"male","name":{"title":"mr","first":"philippe","last":"abraham"},"location":{"street":"5762 grand ave","city":"cumberland","state":"newfoundland and labrador","postcode":"M7T 8D8","coordinates":{"latitude":"-59.7322","longitude":"-28.4732"},"timezone":{"offset":"+9:00","description":"Tokyo, Seoul, Osaka, Sapporo, Yakutsk"}},"email":"philippe.abraham@example.com","login":{"uuid":"c0d98354-3417-4c3e-a90d-a8437956e15c","username":"angryswan702","password":"melvin","salt":"nrfCXo6y","md5":"5d2deb7728b5a1a432b1e85029e6c68a","sha1":"97bacc58401741ee832d20925c79bae7a47e42e6","sha256":"bcd1ba058e8c8798403053c8dfeeda8cd8f209436bb3a72a1d4e4e376a852798"},"dob":{"date":"1973-01-14T17:33:48Z","age":46},"registered":{"date":"2006-08-25T02:12:26Z","age":12},"phone":"453-390-3702","cell":"053-670-2575","id":{"name":"","value":null},"picture":{"large":"https://randomuser.me/api/portraits/men/22.jpg","medium":"https://randomuser.me/api/portraits/med/men/22.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/22.jpg"},"nat":"CA"}]
      * info : {"seed":"937fe2a29fa02806","results":1,"page":1,"version":"1.2"}

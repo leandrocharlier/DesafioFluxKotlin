@@ -1,8 +1,8 @@
-package com.example.desafiofluxkotlin.persona.network
+package com.example.desafiofluxkotlin.people.network
 
 import android.annotation.SuppressLint
-import com.example.desafiofluxkotlin.DaggerPersonaInjector
-import com.example.desafiofluxkotlin.persona.model.Persona
+import com.example.desafiofluxkotlin.DaggerPeopleInjector
+import com.example.desafiofluxkotlin.people.model.People
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
@@ -11,22 +11,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PersonaRepository @Inject constructor() {
+open class PeopleRepository @Inject constructor() {
 
     @Inject
-    lateinit var personaService: PersonaService
+    lateinit var peopleService: PeopleService
 
     init {
-        DaggerPersonaInjector.create().apply { inject(this@PersonaRepository) }
+        DaggerPeopleInjector.create().apply { inject(this@PeopleRepository) }
     }
 
     @SuppressLint("CheckResult")
-    fun obtenerPersonas(
-        succesConsumer: Consumer<Response<Persona>>,
+    fun getPeople(
+        succesConsumer: Consumer<Response<People>>,
         errorConsumer: Consumer<Throwable>,
-        cantidad: Int
+        quantity: Int
     ) {
-        personaService.obtenerPersonas(cantidad)
+        peopleService.getPeople(quantity)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(succesConsumer, errorConsumer)
