@@ -1,17 +1,23 @@
 package com.example.desafiofluxkotlin.people.model
 
-class People {
+import android.os.Parcel
+import android.os.Parcelable
+
+import java.util.ArrayList
+
+class People : Parcelable {
+
     /**
-     * results : [{"gender":"male","name":{"title":"mr","first":"philippe","last":"abraham"},"location":{"street":"5762 grand ave","city":"cumberland","state":"newfoundland and labrador","postcode":"M7T 8D8","coordinates":{"latitude":"-59.7322","longitude":"-28.4732"},"timezone":{"offset":"+9:00","description":"Tokyo, Seoul, Osaka, Sapporo, Yakutsk"}},"email":"philippe.abraham@example.com","login":{"uuid":"c0d98354-3417-4c3e-a90d-a8437956e15c","username":"angryswan702","password":"melvin","salt":"nrfCXo6y","md5":"5d2deb7728b5a1a432b1e85029e6c68a","sha1":"97bacc58401741ee832d20925c79bae7a47e42e6","sha256":"bcd1ba058e8c8798403053c8dfeeda8cd8f209436bb3a72a1d4e4e376a852798"},"dob":{"date":"1973-01-14T17:33:48Z","age":46},"registered":{"date":"2006-08-25T02:12:26Z","age":12},"phone":"453-390-3702","cell":"053-670-2575","id":{"name":"","value":null},"picture":{"large":"https://randomuser.me/api/portraits/men/22.jpg","medium":"https://randomuser.me/api/portraits/med/men/22.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/22.jpg"},"nat":"CA"}]
-     * info : {"seed":"937fe2a29fa02806","results":1,"page":1,"version":"1.2"}
+     * results : [{"gender":"male","name":{"title":"mr","first":"gordon","last":"hamilton"},"location":{"street":"3111 queen street","city":"salford","state":"greater manchester","postcode":"GJ74 3WS","coordinates":{"latitude":"15.1436","longitude":"-165.4709"},"timezone":{"offset":"-3:30","description":"Newfoundland"}},"email":"gordon.hamilton@example.com","login":{"uuid":"6554ab66-322a-44db-92b0-7849d5e1278a","username":"sadbear521","password":"bondage","salt":"nijPqYT2","md5":"b6d7609e04e6c626703317e1a8c92812","sha1":"d39101e7effc1949ad365183ffb8a756843cd265","sha256":"f9a7772eb4a67a2de6d815440e098cda2d4c9bcc224f8f485bbf185bd3843cc6"},"dob":{"date":"1972-12-04T07:41:57Z","age":46},"registered":{"date":"2006-10-05T17:37:07Z","age":12},"phone":"013873 99949","cell":"0756-900-412","id":{"name":"NINO","value":"LH 07 79 45 H"},"picture":{"large":"https://randomuser.me/api/portraits/men/57.jpg","medium":"https://randomuser.me/api/portraits/med/men/57.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/57.jpg"},"nat":"GB"}]
+     * info : {"seed":"b0b56ded400c0f51","results":1,"page":1,"version":"1.2"}
      */
 
     var info: InfoBean? = null
     var results: List<ResultsBean>? = null
 
-    class InfoBean {
+    class InfoBean : Parcelable {
         /**
-         * seed : 937fe2a29fa02806
+         * seed : b0b56ded400c0f51
          * results : 1
          * page : 1
          * version : 1.2
@@ -21,22 +27,52 @@ class People {
         var results: Int = 0
         var page: Int = 0
         var version: String? = null
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeString(this.seed)
+            dest.writeInt(this.results)
+            dest.writeInt(this.page)
+            dest.writeString(this.version)
+        }
+
+        constructor() {}
+
+        protected constructor(`in`: Parcel) {
+            this.seed = `in`.readString()
+            this.results = `in`.readInt()
+            this.page = `in`.readInt()
+            this.version = `in`.readString()
+        }
+
+        companion object CREATOR : Parcelable.Creator<InfoBean> {
+            override fun createFromParcel(parcel: Parcel): InfoBean {
+                return InfoBean(parcel)
+            }
+
+            override fun newArray(size: Int): Array<InfoBean?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 
-    class ResultsBean {
+    class ResultsBean : Parcelable {
         /**
          * gender : male
-         * name : {"title":"mr","first":"philippe","last":"abraham"}
-         * location : {"street":"5762 grand ave","city":"cumberland","state":"newfoundland and labrador","postcode":"M7T 8D8","coordinates":{"latitude":"-59.7322","longitude":"-28.4732"},"timezone":{"offset":"+9:00","description":"Tokyo, Seoul, Osaka, Sapporo, Yakutsk"}}
-         * email : philippe.abraham@example.com
-         * login : {"uuid":"c0d98354-3417-4c3e-a90d-a8437956e15c","username":"angryswan702","password":"melvin","salt":"nrfCXo6y","md5":"5d2deb7728b5a1a432b1e85029e6c68a","sha1":"97bacc58401741ee832d20925c79bae7a47e42e6","sha256":"bcd1ba058e8c8798403053c8dfeeda8cd8f209436bb3a72a1d4e4e376a852798"}
-         * dob : {"date":"1973-01-14T17:33:48Z","age":46}
-         * registered : {"date":"2006-08-25T02:12:26Z","age":12}
-         * phone : 453-390-3702
-         * cell : 053-670-2575
-         * id : {"name":"","value":null}
-         * picture : {"large":"https://randomuser.me/api/portraits/men/22.jpg","medium":"https://randomuser.me/api/portraits/med/men/22.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/22.jpg"}
-         * nat : CA
+         * name : {"title":"mr","first":"gordon","last":"hamilton"}
+         * location : {"street":"3111 queen street","city":"salford","state":"greater manchester","postcode":"GJ74 3WS","coordinates":{"latitude":"15.1436","longitude":"-165.4709"},"timezone":{"offset":"-3:30","description":"Newfoundland"}}
+         * email : gordon.hamilton@example.com
+         * login : {"uuid":"6554ab66-322a-44db-92b0-7849d5e1278a","username":"sadbear521","password":"bondage","salt":"nijPqYT2","md5":"b6d7609e04e6c626703317e1a8c92812","sha1":"d39101e7effc1949ad365183ffb8a756843cd265","sha256":"f9a7772eb4a67a2de6d815440e098cda2d4c9bcc224f8f485bbf185bd3843cc6"}
+         * dob : {"date":"1972-12-04T07:41:57Z","age":46}
+         * registered : {"date":"2006-10-05T17:37:07Z","age":12}
+         * phone : 013873 99949
+         * cell : 0756-900-412
+         * id : {"name":"NINO","value":"LH 07 79 45 H"}
+         * picture : {"large":"https://randomuser.me/api/portraits/men/57.jpg","medium":"https://randomuser.me/api/portraits/med/men/57.jpg","thumbnail":"https://randomuser.me/api/portraits/thumb/men/57.jpg"}
+         * nat : GB
          */
 
         var gender: String? = null
@@ -52,26 +88,54 @@ class People {
         var picture: PictureBean? = null
         var nat: String? = null
 
-        class NameBean {
+        class NameBean : Parcelable {
             /**
              * title : mr
-             * first : philippe
-             * last : abraham
+             * first : gordon
+             * last : hamilton
              */
 
             var title: String? = null
             var first: String? = null
             var last: String? = null
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.title)
+                dest.writeString(this.first)
+                dest.writeString(this.last)
+            }
+
+            constructor() {}
+
+            protected constructor(`in`: Parcel) {
+                this.title = `in`.readString()
+                this.first = `in`.readString()
+                this.last = `in`.readString()
+            }
+
+            companion object CREATOR : Parcelable.Creator<NameBean> {
+                override fun createFromParcel(parcel: Parcel): NameBean {
+                    return NameBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<NameBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
         }
 
-        class LocationBean {
+        class LocationBean : Parcelable {
             /**
-             * street : 5762 grand ave
-             * city : cumberland
-             * state : newfoundland and labrador
-             * postcode : M7T 8D8
-             * coordinates : {"latitude":"-59.7322","longitude":"-28.4732"}
-             * timezone : {"offset":"+9:00","description":"Tokyo, Seoul, Osaka, Sapporo, Yakutsk"}
+             * street : 3111 queen street
+             * city : salford
+             * state : greater manchester
+             * postcode : GJ74 3WS
+             * coordinates : {"latitude":"15.1436","longitude":"-165.4709"}
+             * timezone : {"offset":"-3:30","description":"Newfoundland"}
              */
 
             var street: String? = null
@@ -81,36 +145,122 @@ class People {
             var coordinates: CoordinatesBean? = null
             var timezone: TimezoneBean? = null
 
-            class CoordinatesBean {
+            class CoordinatesBean : Parcelable {
                 /**
-                 * latitude : -59.7322
-                 * longitude : -28.4732
+                 * latitude : 15.1436
+                 * longitude : -165.4709
                  */
 
                 var latitude: String? = null
                 var longitude: String? = null
+
+                override fun describeContents(): Int {
+                    return 0
+                }
+
+                override fun writeToParcel(dest: Parcel, flags: Int) {
+                    dest.writeString(this.latitude)
+                    dest.writeString(this.longitude)
+                }
+
+                constructor() {}
+
+                protected constructor(`in`: Parcel) {
+                    this.latitude = `in`.readString()
+                    this.longitude = `in`.readString()
+                }
+
+                companion object CREATOR : Parcelable.Creator<CoordinatesBean> {
+                    override fun createFromParcel(parcel: Parcel): CoordinatesBean {
+                        return CoordinatesBean(parcel)
+                    }
+
+                    override fun newArray(size: Int): Array<CoordinatesBean?> {
+                        return arrayOfNulls(size)
+                    }
+                }
             }
 
-            class TimezoneBean {
+            class TimezoneBean : Parcelable {
                 /**
-                 * offset : +9:00
-                 * description : Tokyo, Seoul, Osaka, Sapporo, Yakutsk
+                 * offset : -3:30
+                 * description : Newfoundland
                  */
 
                 var offset: String? = null
                 var description: String? = null
+
+                override fun describeContents(): Int {
+                    return 0
+                }
+
+                override fun writeToParcel(dest: Parcel, flags: Int) {
+                    dest.writeString(this.offset)
+                    dest.writeString(this.description)
+                }
+
+                constructor() {}
+
+                protected constructor(`in`: Parcel) {
+                    this.offset = `in`.readString()
+                    this.description = `in`.readString()
+                }
+
+                companion object CREATOR : Parcelable.Creator<TimezoneBean> {
+                    override fun createFromParcel(parcel: Parcel): TimezoneBean {
+                        return TimezoneBean(parcel)
+                    }
+
+                    override fun newArray(size: Int): Array<TimezoneBean?> {
+                        return arrayOfNulls(size)
+                    }
+                }
+            }
+
+            constructor() {}
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.street)
+                dest.writeString(this.city)
+                dest.writeString(this.state)
+                dest.writeString(this.postcode)
+                dest.writeParcelable(this.coordinates, flags)
+                dest.writeParcelable(this.timezone, flags)
+            }
+
+            protected constructor(`in`: Parcel) {
+                this.street = `in`.readString()
+                this.city = `in`.readString()
+                this.state = `in`.readString()
+                this.postcode = `in`.readString()
+                this.coordinates = `in`.readParcelable(CoordinatesBean::class.java.classLoader)
+                this.timezone = `in`.readParcelable(TimezoneBean::class.java.classLoader)
+            }
+
+            companion object CREATOR : Parcelable.Creator<LocationBean> {
+                override fun createFromParcel(parcel: Parcel): LocationBean {
+                    return LocationBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<LocationBean?> {
+                    return arrayOfNulls(size)
+                }
             }
         }
 
-        class LoginBean {
+        class LoginBean : Parcelable {
             /**
-             * uuid : c0d98354-3417-4c3e-a90d-a8437956e15c
-             * username : angryswan702
-             * password : melvin
-             * salt : nrfCXo6y
-             * md5 : 5d2deb7728b5a1a432b1e85029e6c68a
-             * sha1 : 97bacc58401741ee832d20925c79bae7a47e42e6
-             * sha256 : bcd1ba058e8c8798403053c8dfeeda8cd8f209436bb3a72a1d4e4e376a852798
+             * uuid : 6554ab66-322a-44db-92b0-7849d5e1278a
+             * username : sadbear521
+             * password : bondage
+             * salt : nijPqYT2
+             * md5 : b6d7609e04e6c626703317e1a8c92812
+             * sha1 : d39101e7effc1949ad365183ffb8a756843cd265
+             * sha256 : f9a7772eb4a67a2de6d815440e098cda2d4c9bcc224f8f485bbf185bd3843cc6
              */
 
             var uuid: String? = null
@@ -120,48 +270,263 @@ class People {
             var md5: String? = null
             var sha1: String? = null
             var sha256: String? = null
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.uuid)
+                dest.writeString(this.username)
+                dest.writeString(this.password)
+                dest.writeString(this.salt)
+                dest.writeString(this.md5)
+                dest.writeString(this.sha1)
+                dest.writeString(this.sha256)
+            }
+
+            constructor() {}
+
+            protected constructor(`in`: Parcel) {
+                this.uuid = `in`.readString()
+                this.username = `in`.readString()
+                this.password = `in`.readString()
+                this.salt = `in`.readString()
+                this.md5 = `in`.readString()
+                this.sha1 = `in`.readString()
+                this.sha256 = `in`.readString()
+            }
+
+            companion object CREATOR : Parcelable.Creator<LoginBean> {
+                override fun createFromParcel(parcel: Parcel): LoginBean {
+                    return LoginBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<LoginBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
         }
 
-        class DobBean {
+        class DobBean : Parcelable {
             /**
-             * date : 1973-01-14T17:33:48Z
+             * date : 1972-12-04T07:41:57Z
              * age : 46
              */
 
             var date: String? = null
             var age: Int = 0
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.date)
+                dest.writeInt(this.age)
+            }
+
+            constructor() {}
+
+            protected constructor(`in`: Parcel) {
+                this.date = `in`.readString()
+                this.age = `in`.readInt()
+            }
+
+            companion object CREATOR : Parcelable.Creator<DobBean> {
+                override fun createFromParcel(parcel: Parcel): DobBean {
+                    return DobBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<DobBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
         }
 
-        class RegisteredBean {
+        class RegisteredBean : Parcelable {
             /**
-             * date : 2006-08-25T02:12:26Z
+             * date : 2006-10-05T17:37:07Z
              * age : 12
              */
 
             var date: String? = null
             var age: Int = 0
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.date)
+                dest.writeInt(this.age)
+            }
+
+            constructor() {}
+
+            protected constructor(`in`: Parcel) {
+                this.date = `in`.readString()
+                this.age = `in`.readInt()
+            }
+
+            companion object CREATOR : Parcelable.Creator<RegisteredBean> {
+                override fun createFromParcel(parcel: Parcel): RegisteredBean {
+                    return RegisteredBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<RegisteredBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
         }
 
-        class IdBean {
+        class IdBean : Parcelable {
             /**
-             * name :
-             * value : null
+             * name : NINO
+             * value : LH 07 79 45 H
              */
 
             var name: String? = null
-            var value: Any? = null
+            var value: String? = null
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.name)
+                dest.writeString(this.value)
+            }
+
+            constructor() {}
+
+            protected constructor(`in`: Parcel) {
+                this.name = `in`.readString()
+                this.value = `in`.readString()
+            }
+
+            companion object CREATOR : Parcelable.Creator<IdBean> {
+                override fun createFromParcel(parcel: Parcel): IdBean {
+                    return IdBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<IdBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
         }
 
-        class PictureBean {
+        class PictureBean : Parcelable {
             /**
-             * large : https://randomuser.me/api/portraits/men/22.jpg
-             * medium : https://randomuser.me/api/portraits/med/men/22.jpg
-             * thumbnail : https://randomuser.me/api/portraits/thumb/men/22.jpg
+             * large : https://randomuser.me/api/portraits/men/57.jpg
+             * medium : https://randomuser.me/api/portraits/med/men/57.jpg
+             * thumbnail : https://randomuser.me/api/portraits/thumb/men/57.jpg
              */
 
             var large: String? = null
             var medium: String? = null
             var thumbnail: String? = null
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeString(this.large)
+                dest.writeString(this.medium)
+                dest.writeString(this.thumbnail)
+            }
+
+            constructor() {}
+
+            protected constructor(`in`: Parcel) {
+                this.large = `in`.readString()
+                this.medium = `in`.readString()
+                this.thumbnail = `in`.readString()
+            }
+
+            companion object CREATOR : Parcelable.Creator<PictureBean> {
+                override fun createFromParcel(parcel: Parcel): PictureBean {
+                    return PictureBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<PictureBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeString(this.gender)
+            dest.writeParcelable(this.name, flags)
+            dest.writeParcelable(this.location, flags)
+            dest.writeString(this.email)
+            dest.writeParcelable(this.login, flags)
+            dest.writeParcelable(this.dob, flags)
+            dest.writeParcelable(this.registered, flags)
+            dest.writeString(this.phone)
+            dest.writeString(this.cell)
+            dest.writeParcelable(this.id, flags)
+            dest.writeParcelable(this.picture, flags)
+            dest.writeString(this.nat)
+        }
+
+        constructor() {}
+
+        protected constructor(`in`: Parcel) {
+            this.gender = `in`.readString()
+            this.name = `in`.readParcelable(NameBean::class.java.classLoader)
+            this.location = `in`.readParcelable(LocationBean::class.java.classLoader)
+            this.email = `in`.readString()
+            this.login = `in`.readParcelable(LoginBean::class.java.classLoader)
+            this.dob = `in`.readParcelable(DobBean::class.java.classLoader)
+            this.registered = `in`.readParcelable(RegisteredBean::class.java.classLoader)
+            this.phone = `in`.readString()
+            this.cell = `in`.readString()
+            this.id = `in`.readParcelable(IdBean::class.java.classLoader)
+            this.picture = `in`.readParcelable(PictureBean::class.java.classLoader)
+            this.nat = `in`.readString()
+        }
+
+        companion object CREATOR : Parcelable.Creator<ResultsBean> {
+            override fun createFromParcel(parcel: Parcel): ResultsBean {
+                return ResultsBean(parcel)
+            }
+
+            override fun newArray(size: Int): Array<ResultsBean?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeParcelable(this.info, flags)
+        dest.writeList(this.results)
+    }
+
+    constructor() {}
+
+    protected constructor(`in`: Parcel) {
+        this.info = `in`.readParcelable(InfoBean::class.java.classLoader)
+        this.results = ArrayList()
+        `in`.readList(this.results, ResultsBean::class.java.classLoader)
+    }
+
+    companion object CREATOR : Parcelable.Creator<People> {
+        override fun createFromParcel(parcel: Parcel): People {
+            return People(parcel)
+        }
+
+        override fun newArray(size: Int): Array<People?> {
+            return arrayOfNulls(size)
         }
     }
 }

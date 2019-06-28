@@ -1,33 +1,38 @@
 package com.example.desafiofluxkotlin.people.view
 
+import android.app.ActivityOptions
 import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.ImageView
 import com.example.desafiofluxkotlin.DaggerPeopleInjector
 import com.example.desafiofluxkotlin.R
 import com.example.desafiofluxkotlin.databinding.ActivityMainBinding
+import com.example.desafiofluxkotlin.people.MyQueryTextListener
 import com.example.desafiofluxkotlin.people.adapters.EndlessScrollListener
 import com.example.desafiofluxkotlin.people.adapters.PeopleAdapter
 import com.example.desafiofluxkotlin.people.adapters.PeopleItemListener
 import com.example.desafiofluxkotlin.people.model.People
+import com.example.desafiofluxkotlin.people.people_detail.view.PersonDetailActivity
 import com.example.desafiofluxkotlin.people.viewmodel.PeopleViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 import javax.inject.Inject
 
-
 class MainActivity : AppCompatActivity(), PeopleItemListener {
+
+    val QUANTITY: Int = 20
 
     @Inject
     lateinit var peopleViewModel: PeopleViewModel
 
     var viewModel: PeopleViewModel? = null
-    val QUANTITY: Int = 20
     var adapter: PeopleAdapter? = null
 
     init {
@@ -51,32 +56,30 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
         setRecyclerView()
         setInfiniteScroll(true)
         swipeRefresh.setOnRefreshListener { viewModel?.getPeople(QUANTITY) }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         val searchItem = menu.findItem(R.id.action_search)
-        setUpSearchView(searchItem)
+        setSearchView(searchItem)
         return true
     }
 
-    override fun onItemClick(people: People.ResultsBean) {
-        people.name?.first?.let { toast(it) }
+    override fun onItemClick(person: People.ResultsBean, personLogo : ImageView) {
+        val intent = Intent(this, PersonDetailActivity::class.java)
+        intent.putExtra(PersonDetailActivity.EXTRA_PERSON, person)
+        intent.putExtra(PersonDetailActivity.EXTRA_PERSON_LOGO_TRANSITION_NAME, ViewCompat.getTransitionName(personLogo))
+        val options = ActivityOptions
+            .makeSceneTransitionAnimation(this, personLogo, ViewCompat.getTransitionName(personLogo))
+        startActivity(intent, options.toBundle())
     }
 
-    private fun setUpSearchView(searchItem: MenuItem) {
+    private fun setSearchView(searchItem: MenuItem) {
         val searchView = searchItem.actionView as SearchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                setInfiniteScroll(newText.isEmpty())
-                viewModel?.filterPeople(newText)?.let { adapter?.updatePeople(it) }
-                return false
+        searchView.setOnQueryTextListener(object : MyQueryTextListener(), SearchView.OnQueryTextListener {
+            override fun onSearch(text: String) {
+                setInfiniteScroll(text.isEmpty())
+                viewModel?.filterPeople(text)?.let { adapter?.updatePeople(it) }
             }
         })
     }
@@ -87,11 +90,6 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
                 hideLoading()
             }
         })
-    }
-
-    private fun hideLoading() {
-        loading.hide()
-        swipeRefresh.isRefreshing = false
     }
 
     private fun setRecyclerView() {
@@ -112,5 +110,10 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
                 }
             })
         } else recyclerPeople.clearOnScrollListeners()
+    }
+
+    private fun hideLoading() {
+        loading.hide()
+        swipeRefresh.isRefreshing = false
     }
 }

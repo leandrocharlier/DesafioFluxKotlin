@@ -7,7 +7,7 @@
     android:background="?selectableItemBackground">
 
     <ImageView
-        android:id="@+id/peopleLogo"
+        android:id="@+id/personLogo"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -18,26 +18,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/peopleUser"
+        android:id="@+id/personUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/peopleLogo"
-        app:layout_constraintTop_toTopOf="@+id/peopleLogo"
+        app:layout_constraintStart_toEndOf="@+id/personLogo"
+        app:layout_constraintTop_toTopOf="@+id/personLogo"
         tools:text="Leandro" />
 
     <TextView
-        android:id="@+id/peopleName"
+        android:id="@+id/personName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/peopleLogo"
-        app:layout_constraintLeft_toRightOf="@+id/peopleLogo"
+        app:layout_constraintBottom_toBottomOf="@+id/personLogo"
+        app:layout_constraintLeft_toRightOf="@+id/personLogo"
         tools:text="Leandro Charlier" />
 
 
