@@ -9,9 +9,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.desafiofluxkotlin.R
 import com.example.desafiofluxkotlin.people.model.People
 import kotlinx.android.synthetic.main.persona_item.view.*
+import java.util.*
 
-class PeopleAdapter(var items: List<People.ResultsBean>, val listener: PeopleItemListener) :
+class PeopleAdapter(private val listener: PeopleItemListener) :
     RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
+
+    private var items: List<People.ResultsBean> = Collections.emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.persona_item, parent, false))
@@ -27,7 +30,7 @@ class PeopleAdapter(var items: List<People.ResultsBean>, val listener: PeopleIte
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val SPACE = " "
+        private val SPACE = " "
 
         fun bind(item: People.ResultsBean, listener: PeopleItemListener) = with(itemView) {
             Glide.with(context)

@@ -28,7 +28,6 @@ class PeopleViewModel @Inject constructor() : ViewModel() {
         peopleRepository.getPeople(Consumer {
             if (it.isSuccessful) {
                 peopleList.value = it.body()
-                message.value = EXITO
             } else {
                 message.value = ERROR
             }
@@ -43,7 +42,6 @@ class PeopleViewModel @Inject constructor() : ViewModel() {
             if (it.isSuccessful) {
                 (peopleList.value?.results as ArrayList).addAll(it.body()?.results as ArrayList)
                 peopleList.value = peopleList.value
-                message.value = EXITO
             } else {
                 message.value = ERROR
             }
@@ -57,6 +55,5 @@ class PeopleViewModel @Inject constructor() : ViewModel() {
             it.filter { resultsBean -> resultsBean.login?.username!!.contains(text) }
         }!!
     }
-
 
 }
