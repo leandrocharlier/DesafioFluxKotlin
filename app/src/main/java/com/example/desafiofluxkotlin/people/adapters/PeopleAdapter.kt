@@ -12,23 +12,49 @@ import kotlinx.android.synthetic.main.persona_item.view.*
 import java.util.*
 
 class PeopleAdapter(private val listener: PeopleItemListener) :
-    RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val VIEW_TYPE_ITEM = 0
+    private val VIEW_TYPE_LOADING = 1
     private var items: List<People.ResultsBean> = Collections.emptyList()
+    private var showLoading: Boolean = false
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.persona_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == VIEW_TYPE_ITEM) {
+            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.persona_item, parent, false))
+        } else {
+            LoadingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.loading_item, parent, false))
+        }
+    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position], listener)
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        if (viewHolder is ItemViewHolder) {
+            viewHolder.bind(items[position], listener)
+        }
+    }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int {
+        return if (items.isNotEmpty() && showLoading) items.size + 1
+        else return items.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        if (position >= items.size && showLoading) {
+            return VIEW_TYPE_LOADING
+        }
+        return VIEW_TYPE_ITEM
+    }
 
     fun updatePeople(items: List<People.ResultsBean>) {
         this.items = items
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun setLoading(showLoading: Boolean) {
+        this.showLoading = showLoading
+    }
+
+    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val SPACE = " "
 
@@ -43,4 +69,7 @@ class PeopleAdapter(private val listener: PeopleItemListener) :
             setOnClickListener { listener.onItemClick(item) }
         }
     }
+
+    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
 }

@@ -74,14 +74,11 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                if (newText.isEmpty()) setInfiniteScroll(true)
-                else setInfiniteScroll(false)
-
+                setInfiniteScroll(newText.isEmpty())
                 viewModel?.filterPeople(newText)?.let { adapter?.updatePeople(it) }
                 return false
             }
         })
-
     }
 
     private fun setMessageObserver() {
@@ -107,6 +104,7 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
     }
 
     private fun setInfiniteScroll(activated: Boolean) {
+        adapter?.setLoading(activated)
         if (activated) {
             recyclerPeople.addOnScrollListener(object : EndlessScrollListener() {
                 override fun onLoadMore() {
