@@ -1,7 +1,7 @@
 package com.example.desafiofluxkotlin.people.network
 
 import android.annotation.SuppressLint
-import com.example.desafiofluxkotlin.DaggerPeopleInjector
+import com.example.desafiofluxkotlin.people.di.DaggerPeopleComponent
 import com.example.desafiofluxkotlin.people.model.People
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
@@ -17,7 +17,7 @@ open class PeopleRepository @Inject constructor() {
     lateinit var peopleService: PeopleService
 
     init {
-        DaggerPeopleInjector.create().apply { inject(this@PeopleRepository) }
+        DaggerPeopleComponent.create().apply { inject(this@PeopleRepository) }
     }
 
     @SuppressLint("CheckResult")

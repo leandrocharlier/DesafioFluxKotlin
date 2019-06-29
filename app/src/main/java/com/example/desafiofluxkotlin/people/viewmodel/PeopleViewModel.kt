@@ -1,7 +1,7 @@
 package com.example.desafiofluxkotlin.people.viewmodel
 
 import android.arch.lifecycle.*
-import com.example.desafiofluxkotlin.DaggerPeopleInjector
+import com.example.desafiofluxkotlin.people.di.DaggerPeopleComponent
 import com.example.desafiofluxkotlin.people.model.People
 import com.example.desafiofluxkotlin.people.network.PeopleRepository
 import io.reactivex.functions.Consumer
@@ -14,14 +14,13 @@ class PeopleViewModel @Inject constructor() : ViewModel() {
     lateinit var peopleRepository: PeopleRepository
 
     val ERROR: String = "ERROR"
-    val EXITO: String = "ÉXITO"
 
     var message: MutableLiveData<String> = MutableLiveData()
     var peopleList: MutableLiveData<People> = MutableLiveData()
     var page: Int = 1
 
     init {
-        DaggerPeopleInjector.create().apply { inject(this@PeopleViewModel) }
+        DaggerPeopleComponent.create().apply { inject(this@PeopleViewModel) }
     }
 
     fun getPeople(quantity: Int) {

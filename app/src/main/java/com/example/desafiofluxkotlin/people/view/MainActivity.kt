@@ -11,15 +11,15 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import com.example.desafiofluxkotlin.DaggerPeopleInjector
 import com.example.desafiofluxkotlin.R
 import com.example.desafiofluxkotlin.databinding.ActivityMainBinding
 import com.example.desafiofluxkotlin.people.MyQueryTextListener
 import com.example.desafiofluxkotlin.people.adapters.EndlessScrollListener
 import com.example.desafiofluxkotlin.people.adapters.PeopleAdapter
 import com.example.desafiofluxkotlin.people.adapters.PeopleItemListener
+import com.example.desafiofluxkotlin.people.di.DaggerPeopleComponent
 import com.example.desafiofluxkotlin.people.model.People
-import com.example.desafiofluxkotlin.people.people_detail.view.PersonDetailActivity
+import com.example.desafiofluxkotlin.person_detail.view.PersonDetailActivity
 import com.example.desafiofluxkotlin.people.viewmodel.PeopleViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), PeopleItemListener {
     var adapter: PeopleAdapter? = null
 
     init {
-        DaggerPeopleInjector.create().apply { inject(this@MainActivity) }
+        DaggerPeopleComponent.builder().build().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

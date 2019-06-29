@@ -1,14 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/personLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-</android.support.constraint.ConstraintLayout>
+        <variable
+            name="viewModel"
+            type="com.example.desafiofluxkotlin.person_detail.viewmodel.PersonDetailViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/personLogo"
+            android:layout_width="match_parent"
+            android:layout_height="194dp"
+            android:contentDescription="@string/person_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/personUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@{viewModel.personUser}"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/personLogo"
+            tools:text="Leandro" />
+
+        <TextView
+            android:id="@+id/personName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@{viewModel.personName}"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@+id/personUser"
+            app:layout_constraintTop_toBottomOf="@+id/personUser"
+            tools:text="Leandro Charlier" />
+
+        <TextView
+            android:id="@+id/personAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@{viewModel.personAge}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/personName"
+            app:layout_constraintLeft_toRightOf="@+id/personName"
+            app:layout_constraintTop_toTopOf="@+id/personName"
+            tools:text="Age: 25" />
+
+        <TextView
+            android:id="@+id/personEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@{viewModel.personEmail}"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="@+id/personName"
+            app:layout_constraintTop_toBottomOf="@+id/personName"
+            tools:text="leandrocharlier@gmail.com" />
+
+        <Button
+            android:id="@+id/buttonLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/outlined_button"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/location_button"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/personEmail"
+            app:layout_constraintTop_toBottomOf="@+id/personEmail" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

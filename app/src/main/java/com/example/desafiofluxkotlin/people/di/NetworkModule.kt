@@ -1,4 +1,4 @@
-package com.example.desafiofluxkotlin
+package com.example.desafiofluxkotlin.people.di
 
 import com.example.desafiofluxkotlin.people.network.PeopleService
 import dagger.Module
